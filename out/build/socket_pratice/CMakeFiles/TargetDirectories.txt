@@ -1,0 +1,4 @@
+/home/zyb/Demo/CPP/VScode/my_socket_pratice/out/build/socket_pratice/CMakeFiles/cilent.dir
+/home/zyb/Demo/CPP/VScode/my_socket_pratice/out/build/socket_pratice/CMakeFiles/server.dir
+/home/zyb/Demo/CPP/VScode/my_socket_pratice/out/build/socket_pratice/CMakeFiles/edit_cache.dir
+/home/zyb/Demo/CPP/VScode/my_socket_pratice/out/build/socket_pratice/CMakeFiles/rebuild_cache.dir
