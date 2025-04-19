@@ -1,14 +1,15 @@
 #### socket练习 
 ###### 服务器
- 1.创建用于监听的socket lfd
- 2.创建用于存储server地址的sockaddr_in地址，并赋值 
- 3.将lfd与server_addr绑定 bind(lfd,(struct sockaddr*)&server_addr,sizeof(serveraddr))
- 4.开始监听 listen(lfd,128);
- 5.创建用于存储监听到的客户端地址的sockaddr_in地址
- 6.accept(lfd,)
- ~~7.开始连接 connect（）~~ 服务器不需要connect
- 7.通讯 read write
- 8.关闭sokcet
+ 1.创建用于监听的socket lfd  
+ 2.创建用于存储server地址的sockaddr_in地址，并赋值  
+ 3.将lfd与server_addr绑定 bind(lfd,(struct sockaddr*)&server_addr,sizeof(serveraddr))  
+ 4.开始监听 listen(lfd,128);  
+ 5.创建用于存储监听到的客户端地址的sockaddr_in地址  
+ 6.accept(lfd,)  
+ ~~7.开始连接 connect（）~~ 服务器不需要connect  
+ 7.通讯 read write  
+ 8.关闭sokcet  
+ 
  ###### 代码
  ```cpp
  #include<所有需要的头文件>
@@ -48,11 +49,11 @@
  }
  ```
 ###### 客户端步骤
-1.创建用于通讯的socket
-2.指定服务器地址
-3.连接服务器connect
-4.传输数据
-5.关闭连接
+1.创建用于通讯的socket  
+2.指定服务器地址  
+3.连接服务器connect  
+4.传输数据  
+5.关闭连接  
 ```cpp
 #include<需要用到的头文件>
 using namespace std;
