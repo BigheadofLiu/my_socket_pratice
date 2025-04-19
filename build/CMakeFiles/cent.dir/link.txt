@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/cent.dir/client.cpp.o -o cent 

@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/zyb/Demo/CPP/VScode/my_socket_pratice/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/cilent.dir/client.cpp.o -c /home/zyb/Demo/CPP/VScode/my_socket_pratice/client.cpp",
+  "file": "/home/zyb/Demo/CPP/VScode/my_socket_pratice/client.cpp",
+  "output": "CMakeFiles/cilent.dir/client.cpp.o"
+},
+{
+  "directory": "/home/zyb/Demo/CPP/VScode/my_socket_pratice/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/server.dir/server.cpp.o -c /home/zyb/Demo/CPP/VScode/my_socket_pratice/server.cpp",
+  "file": "/home/zyb/Demo/CPP/VScode/my_socket_pratice/server.cpp",
+  "output": "CMakeFiles/server.dir/server.cpp.o"
+}
+]
