@@ -117,17 +117,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cilent
+# Target rules for targets named client
 
 # Build rule for target.
-cilent: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cilent
-.PHONY : cilent
+client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client
+.PHONY : client
 
 # fast build rule for target.
-cilent/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cilent.dir/build.make CMakeFiles/cilent.dir/build
-.PHONY : cilent/fast
+client/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
+.PHONY : client/fast
 
 #=============================================================================
 # Target rules for targets named server
@@ -142,12 +142,25 @@ server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
 
+#=============================================================================
+# Target rules for targets named server_thread
+
+# Build rule for target.
+server_thread: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 server_thread
+.PHONY : server_thread
+
+# fast build rule for target.
+server_thread/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/build
+.PHONY : server_thread/fast
+
 client.o: client.cpp.o
 .PHONY : client.o
 
 # target to build an object file
 client.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cilent.dir/build.make CMakeFiles/cilent.dir/client.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.o
 .PHONY : client.cpp.o
 
 client.i: client.cpp.i
@@ -155,7 +168,7 @@ client.i: client.cpp.i
 
 # target to preprocess a source file
 client.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cilent.dir/build.make CMakeFiles/cilent.dir/client.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.i
 .PHONY : client.cpp.i
 
 client.s: client.cpp.s
@@ -163,7 +176,7 @@ client.s: client.cpp.s
 
 # target to generate assembly for a file
 client.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cilent.dir/build.make CMakeFiles/cilent.dir/client.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/client.cpp.s
 .PHONY : client.cpp.s
 
 server.o: server.cpp.o
@@ -190,6 +203,30 @@ server.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.s
 .PHONY : server.cpp.s
 
+server_thread.o: server_thread.cpp.o
+.PHONY : server_thread.o
+
+# target to build an object file
+server_thread.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/server_thread.cpp.o
+.PHONY : server_thread.cpp.o
+
+server_thread.i: server_thread.cpp.i
+.PHONY : server_thread.i
+
+# target to preprocess a source file
+server_thread.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/server_thread.cpp.i
+.PHONY : server_thread.cpp.i
+
+server_thread.s: server_thread.cpp.s
+.PHONY : server_thread.s
+
+# target to generate assembly for a file
+server_thread.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/server_thread.cpp.s
+.PHONY : server_thread.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -198,14 +235,18 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... cilent"
+	@echo "... client"
 	@echo "... server"
+	@echo "... server_thread"
 	@echo "... client.o"
 	@echo "... client.i"
 	@echo "... client.s"
 	@echo "... server.o"
 	@echo "... server.i"
 	@echo "... server.s"
+	@echo "... server_thread.o"
+	@echo "... server_thread.i"
+	@echo "... server_thread.s"
 .PHONY : help
 
 

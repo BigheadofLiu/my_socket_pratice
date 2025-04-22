@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/socket_pratice.dir/client.cpp.o CMakeFiles/socket_pratice.dir/server.cpp.o -o socket_pratice 

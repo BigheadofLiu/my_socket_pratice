@@ -5,6 +5,7 @@
 #include<sys/socket.h>
 #include<unistd.h> 
 #include<thread>
+#include<vector>
 using namespace std;
 #define MAX_CONNECT 512 //定义最大信息连接
 //server 改为多线程
@@ -22,12 +23,12 @@ using namespace std;
 
 //新增一个用于存储主进程监听到的通讯socket和socketaddr_in地址(方便传递给子进程)
 struct accept_info{
-    struct sockaddr_in addr_client;
-    int cfd;
+    struct sockaddr_in addr_client;  //客户端地址信息
+    int cfd; //通信文件描述符
 };
-accept_info info[MAX_CONNECT];
+// accept_info info[MAX_CONNECT]{0}; //使用数组存储信息 cpp能否改为用vector?
+vector<accept_info> v_info(MAX_CONNECT);
 //子进程函数声明
-
 void do_thread(void* args);
 int main(){
 
@@ -62,44 +63,54 @@ int main(){
     //4.等待连接
     
     //循环检测是否有客户端发起
-    struct sockaddr_in addr_client={};//用于接受来自监听的客户端地址信息(这里就用不到了)
-    socklen_t len=sizeof(addr_client);  //还能用一下
+    // struct sockaddr_in addr_client={0};//用于接受来自监听的客户端地址信息(这里就用不到了)
+    // socklen_t len=sizeof(addr_client);  //还能用一下
 
     //初始化info数组
-    for(auto i:info){
-        i={};
+    for(auto &i:v_info){  //error：范围for循环不会修改初始值 通过引用修改
+        i.addr_client={};
         i.cfd=-1;  //-1为置空标志
     }
     while(1){
-        struct accept_info* p_info={};
-        for(auto i:info){
+        struct accept_info* p_info=nullptr;
+        // socklen_t len=sizeof(p_info->addr_client);
+        socklen_t len=sizeof(sockaddr_in);
+        for(auto& i:v_info){
             if(i.cfd==-1){
                 p_info=&i;
+                break; //break在这里
             }
             //如果未找到空闲 证明已超最大连接数
-            break;
         }
-        int cfd=accept(lfd,(struct sockaddr*)&p_info->addr_client,&len);
+        if(!p_info){
+            cerr<<"已达最大连接数"<<endl;
+            continue;
+        }
+        p_info->cfd=accept(lfd,(struct sockaddr*)&p_info->addr_client,&len);
         //存储cfd
-        p_info->cfd=cfd;
-        if(cfd==-1){
+        // p_info->cfd=cfd;
+        if(p_info->cfd==-1){
             perror("accept");
             // exit(0);                                         
-            break;
+            continue;
         }
-
+        //创建子线程
+        thread t1(do_thread,p_info);
+        t1.detach();  //子线程和主线程分离
     }
 }
 
 void do_thread(void* args){
     //打印监听到的ip和端口号
+    accept_info* p_info=(accept_info*)args;
+
     char ip[32]{0};
-    cout<<"监听到的ip："<<inet_ntop(AF_INET,&addr_client.sin_addr.s_addr,ip,sizeof(ip))<<" "<<"监听到的端口："<<ntohs(addr_client.sin_port)<<endl;
+    cout<<"监听到的ip："<<inet_ntop(AF_INET,&p_info->addr_client.sin_addr.s_addr,ip,sizeof(ip))<<" "<<"监听到的端口："<<ntohs(p_info->addr_client.sin_port)<<endl;
     //5.开始传输数据
-    int number{0};
+    int number=0;
     while(1){
         char buf[1024]{0};
-        int ret=read(cfd,buf,sizeof(buf));
+        int ret=read(p_info->cfd,buf,sizeof(buf));
         if(ret>0){
             cout<<"接收到客户端的信息："<<buf/* <<" "<<number++ */<<endl;
         }else if(ret=0){
@@ -110,12 +121,15 @@ void do_thread(void* args){
             break;
         }
         fill(begin(buf),end(buf),0);
-        auto str="服务器已确认收到客户端信息"+to_string(number);
+        auto str="服务器已确认收到客户端信息:"+to_string(number);
         strcpy(buf,str.c_str());
-        write(cfd,buf,strlen(buf));
+        write(p_info->cfd,buf,strlen(buf));
         sleep(1);
     }
-    close(lfd);
-    close(cfd);
+    // close(lfd);
+    // close(cfd);
+    close(p_info->cfd);
+    p_info->cfd=-1;
+
 }
 
