@@ -155,6 +155,67 @@ server_thread/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/build
 .PHONY : server_thread/fast
 
+#=============================================================================
+# Target rules for targets named server_threadpool
+
+# Build rule for target.
+server_threadpool: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 server_threadpool
+.PHONY : server_threadpool
+
+# fast build rule for target.
+server_threadpool/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/build
+.PHONY : server_threadpool/fast
+
+ThreadPool/TaskQueue.o: ThreadPool/TaskQueue.cpp.o
+.PHONY : ThreadPool/TaskQueue.o
+
+# target to build an object file
+ThreadPool/TaskQueue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/TaskQueue.cpp.o
+.PHONY : ThreadPool/TaskQueue.cpp.o
+
+ThreadPool/TaskQueue.i: ThreadPool/TaskQueue.cpp.i
+.PHONY : ThreadPool/TaskQueue.i
+
+# target to preprocess a source file
+ThreadPool/TaskQueue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/TaskQueue.cpp.i
+.PHONY : ThreadPool/TaskQueue.cpp.i
+
+ThreadPool/TaskQueue.s: ThreadPool/TaskQueue.cpp.s
+.PHONY : ThreadPool/TaskQueue.s
+
+# target to generate assembly for a file
+ThreadPool/TaskQueue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/TaskQueue.cpp.s
+.PHONY : ThreadPool/TaskQueue.cpp.s
+
+ThreadPool/ThreadPool.o: ThreadPool/ThreadPool.cpp.o
+.PHONY : ThreadPool/ThreadPool.o
+
+# target to build an object file
+ThreadPool/ThreadPool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/ThreadPool.cpp.o
+.PHONY : ThreadPool/ThreadPool.cpp.o
+
+ThreadPool/ThreadPool.i: ThreadPool/ThreadPool.cpp.i
+.PHONY : ThreadPool/ThreadPool.i
+
+# target to preprocess a source file
+ThreadPool/ThreadPool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/ThreadPool.cpp.i
+.PHONY : ThreadPool/ThreadPool.cpp.i
+
+ThreadPool/ThreadPool.s: ThreadPool/ThreadPool.cpp.s
+.PHONY : ThreadPool/ThreadPool.s
+
+# target to generate assembly for a file
+ThreadPool/ThreadPool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/ThreadPool/ThreadPool.cpp.s
+.PHONY : ThreadPool/ThreadPool.cpp.s
+
 client.o: client.cpp.o
 .PHONY : client.o
 
@@ -227,6 +288,30 @@ server_thread.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/server_thread.cpp.s
 .PHONY : server_thread.cpp.s
 
+server_threadpool.o: server_threadpool.cpp.o
+.PHONY : server_threadpool.o
+
+# target to build an object file
+server_threadpool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/server_threadpool.cpp.o
+.PHONY : server_threadpool.cpp.o
+
+server_threadpool.i: server_threadpool.cpp.i
+.PHONY : server_threadpool.i
+
+# target to preprocess a source file
+server_threadpool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/server_threadpool.cpp.i
+.PHONY : server_threadpool.cpp.i
+
+server_threadpool.s: server_threadpool.cpp.s
+.PHONY : server_threadpool.s
+
+# target to generate assembly for a file
+server_threadpool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/server_threadpool.cpp.s
+.PHONY : server_threadpool.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -238,6 +323,13 @@ help:
 	@echo "... client"
 	@echo "... server"
 	@echo "... server_thread"
+	@echo "... server_threadpool"
+	@echo "... ThreadPool/TaskQueue.o"
+	@echo "... ThreadPool/TaskQueue.i"
+	@echo "... ThreadPool/TaskQueue.s"
+	@echo "... ThreadPool/ThreadPool.o"
+	@echo "... ThreadPool/ThreadPool.i"
+	@echo "... ThreadPool/ThreadPool.s"
 	@echo "... client.o"
 	@echo "... client.i"
 	@echo "... client.s"
@@ -247,6 +339,9 @@ help:
 	@echo "... server_thread.o"
 	@echo "... server_thread.i"
 	@echo "... server_thread.s"
+	@echo "... server_threadpool.o"
+	@echo "... server_threadpool.i"
+	@echo "... server_threadpool.s"
 .PHONY : help
 
 

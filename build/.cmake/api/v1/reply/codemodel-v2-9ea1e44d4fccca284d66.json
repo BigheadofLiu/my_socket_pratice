@@ -17,7 +17,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -34,7 +35,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -59,6 +61,13 @@
 					"id" : "server_thread::@6890427a1f51a3e7e1df",
 					"jsonFile" : "target-server_thread-Debug-7adaaa9b4314b30802b2.json",
 					"name" : "server_thread",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "server_threadpool::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-server_threadpool-Debug-35ce0af78106d57f3ecf.json",
+					"name" : "server_threadpool",
 					"projectIndex" : 0
 				}
 			]

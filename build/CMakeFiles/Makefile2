@@ -66,6 +66,7 @@ CMAKE_BINARY_DIR = /home/zyb/Demo/CPP/VScode/my_socket_pratice/build
 all: CMakeFiles/client.dir/all
 all: CMakeFiles/server.dir/all
 all: CMakeFiles/server_thread.dir/all
+all: CMakeFiles/server_threadpool.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -76,6 +77,7 @@ preinstall:
 clean: CMakeFiles/client.dir/clean
 clean: CMakeFiles/server.dir/clean
 clean: CMakeFiles/server_thread.dir/clean
+clean: CMakeFiles/server_threadpool.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -155,6 +157,32 @@ server_thread: CMakeFiles/server_thread.dir/rule
 CMakeFiles/server_thread.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_thread.dir/build.make CMakeFiles/server_thread.dir/clean
 .PHONY : CMakeFiles/server_thread.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/server_threadpool.dir
+
+# All Build rule for target.
+CMakeFiles/server_threadpool.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/zyb/Demo/CPP/VScode/my_socket_pratice/build/CMakeFiles --progress-num=7,8,9,10 "Built target server_threadpool"
+.PHONY : CMakeFiles/server_threadpool.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/server_threadpool.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyb/Demo/CPP/VScode/my_socket_pratice/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/server_threadpool.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyb/Demo/CPP/VScode/my_socket_pratice/build/CMakeFiles 0
+.PHONY : CMakeFiles/server_threadpool.dir/rule
+
+# Convenience name for target.
+server_threadpool: CMakeFiles/server_threadpool.dir/rule
+.PHONY : server_threadpool
+
+# clean rule for target.
+CMakeFiles/server_threadpool.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server_threadpool.dir/build.make CMakeFiles/server_threadpool.dir/clean
+.PHONY : CMakeFiles/server_threadpool.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

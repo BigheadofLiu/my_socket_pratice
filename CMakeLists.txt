@@ -9,3 +9,9 @@ server.cpp)
 
 add_executable(server_thread
 server_thread.cpp)
+
+add_executable(server_threadpool
+ThreadPool/ThreadPool.cpp
+ThreadPool/TaskQueue.cpp
+server_threadpool.cpp
+)
