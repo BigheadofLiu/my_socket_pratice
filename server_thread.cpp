@@ -130,6 +130,6 @@ void do_thread(void* args){
     // close(cfd);
     close(p_info->cfd);
     p_info->cfd=-1;
-
+    
 }
 

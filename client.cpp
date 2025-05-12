@@ -38,7 +38,7 @@ if(ret==-1){
 int number{0};
 while(1){
     char buf[1024]{0};//用作读写缓存区
-    auto str="hello server"+to_string(number++);
+    auto str="hello server:"+to_string(number++);
     strcpy(buf,str.c_str());
     //发送数据
     write(cfd,buf,strlen(buf)+1);

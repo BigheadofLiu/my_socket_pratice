@@ -35,10 +35,10 @@ struct pool_info{
     int fd;
 };
 // accept_info info[MAX_CONNECT]{0}; //使用数组存储信息 cpp能否改为用vector?
-vector<accept_info> v_info(MAX_CONNECT);
+// vector<accept_info> v_info(MAX_CONNECT);
 // pool_info PoolInfo;
 //子进程函数声明(这里应该改为两种工作函数)
-void do_thread(void* args); //获得用于通信的套接字后 传输数据的工作函数
+void do_thread(/* void* args */shared_ptr<accept_info>); //获得用于通信的套接字后 传输数据的工作函数
 void accept_connect(void* args); //用于获得监听到的用于通信的文件描述符工作函数
 
 int main(){
@@ -79,23 +79,30 @@ int main(){
     // socklen_t len=sizeof(addr_client);  //还能用一下
 
     //初始化info数组
-    for(auto &i:v_info){  //error：范围for循环不会修改初始值 通过引用修改
-        i.addr_client={};
-        i.cfd=-1;  //-1为置空标志
-    }
-    ThreadPool pool(3,10); //创建线程池
+    // for(auto &i:v_info){  //error：范围for循环不会修改初始值 通过引用修改
+    //     i.addr_client={};
+    //     i.cfd=-1;  //-1为置空标志
+    // }
+    cout<<"服务器正在监听192.168.137.137：10000"<<endl;
+
+    ThreadPool pool(10,20); //创建线程池（太小了）
     pool_info* PoolInfo=new pool_info();
     PoolInfo->p=&pool;
     PoolInfo->fd=lfd;
     pool.AddTask([=](){accept_connect(PoolInfo);});  //非要这样转吗
+    while(1){
+        this_thread::sleep_for(chrono::seconds(60));
+    }
+    delete PoolInfo;
     return 0;
 }
 void accept_connect(void* args){
     struct pool_info* Poolinfo=(pool_info*)args;
     socklen_t len=sizeof(sockaddr_in);
     while(1){
-        struct accept_info* p_info=nullptr;
-        p_info=new struct accept_info();
+        // struct accept_info* p_info=nullptr;
+        // p_info=new struct accept_info();
+        auto p_info=std::make_shared<accept_info>();
         // socklen_t len=sizeof(p_info->addr_client);
 
         // for(auto& i:v_info){
@@ -126,9 +133,9 @@ void accept_connect(void* args){
     }
 }
 
-void do_thread(void* args){
+void do_thread(/* void* args */std::shared_ptr<accept_info> p_info){
     //打印监听到的ip和端口号
-    accept_info* p_info=(accept_info*)args;
+    // accept_info* p_info=(accept_info*)args;
 
     char ip[32]{0};
     cout<<"监听到的ip："<<inet_ntop(AF_INET,&p_info->addr_client.sin_addr.s_addr,ip,sizeof(ip))<<" "<<"监听到的端口："<<ntohs(p_info->addr_client.sin_port)<<endl;
@@ -139,7 +146,7 @@ void do_thread(void* args){
         int ret=read(p_info->cfd,buf,sizeof(buf));
         if(ret>0){
             cout<<"接收到客户端的信息："<<buf/* <<" "<<number++ */<<endl;
-        }else if(ret=0){
+        }else if(ret==0){
             cout<<"连接已断开"<<endl;
             break;
         }else{
@@ -147,7 +154,7 @@ void do_thread(void* args){
             break;
         }
         fill(begin(buf),end(buf),0);
-        auto str="服务器已确认收到客户端信息:"+to_string(number);
+        auto str="服务器已确认收到客户端信息:"+to_string(number++);
         strcpy(buf,str.c_str());
         write(p_info->cfd,buf,strlen(buf));
         sleep(1);
@@ -155,6 +162,6 @@ void do_thread(void* args){
     // close(lfd);
     // close(cfd);
     close(p_info->cfd);
-    p_info->cfd=-1;
-
+    // p_info->cfd=-1;
+        
 }
