@@ -26,7 +26,7 @@ if(cfd==-1){
 struct sockaddr_in addr_server;
 addr_server.sin_family=AF_INET;
 addr_server.sin_port=htons(10000); //端口：主机序->网络序
-inet_pton(AF_INET,"192.168.137.137",&addr_server.sin_addr.s_addr); //ip:主机序->网络序
+inet_pton(AF_INET,"172.16.172.129",&addr_server.sin_addr.s_addr); //ip:主机序->网络序
 
 //3.连接
 int ret=connect(cfd,(struct sockaddr*)&addr_server,sizeof(addr_server));
@@ -35,6 +35,8 @@ if(ret==-1){
     exit(0);
 }
 //4.通讯
+//阻塞式使用 read/write没有问题 
+//非阻塞是记得用 recv/send
 int number{0};
 while(1){
     char buf[1024]{0};//用作读写缓存区

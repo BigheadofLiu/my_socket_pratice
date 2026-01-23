@@ -15,3 +15,11 @@ ThreadPool/ThreadPool.cpp
 ThreadPool/TaskQueue.cpp
 server_threadpool.cpp
 )
+
+add_executable(server_select
+server_select.cc
+)
+
+add_executable(client_select
+client_select.cc
+)
