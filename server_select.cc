@@ -24,7 +24,7 @@ struct fd_info{
 };
 
 void accept_thread(/*fd_info* info*/const std::shared_ptr<fd_info> info){
-    std::cout<<" accept子线程开始执行，线程 id："<<std::this_thread::get_id();
+    std::cout<<" accept子线程开始执行，线程 id："<<std::this_thread::get_id()<<std::endl;
     int cfd=accept(info->fd,nullptr,nullptr);
     if(cfd==-1){
         perror("accept");
@@ -41,7 +41,7 @@ void accept_thread(/*fd_info* info*/const std::shared_ptr<fd_info> info){
 }
 
 void comm_thread(/*fd_info* info*/const std::shared_ptr<fd_info> info){
-    std::cout<<" 通信子线程开始执行，线程 id："<<std::this_thread::get_id();
+    std::cout<<" 通信子线程开始执行，线程 id："<<std::this_thread::get_id()<<std::endl;
     // 开始收发数据(拷贝阻塞模式的读写)
     char buffer[1024] {};
 
