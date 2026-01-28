@@ -23,3 +23,7 @@ server_select.cc
 add_executable(client_select
 client_select.cc
 )
+
+add_executable(server_select_thread
+server_select_thread.cc
+)
