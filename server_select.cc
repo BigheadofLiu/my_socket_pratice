@@ -11,7 +11,6 @@
 #include<unistd.h> 
 #include<sys/select.h> //using select
 
-
 int main(){
         //1.创建用于监听的套接字
         int lfd=socket(AF_INET,SOCK_STREAM,0);
@@ -59,24 +58,18 @@ int main(){
         while(1){
  
             fd_set temp_set=red_set;  //拷贝一份
-     
-            
             int ret_select=select(maxfd+1,&temp_set,nullptr,nullptr,nullptr);
             if(ret_select==-1){
                 perror("select");
                 break;
             }
             if(FD_ISSET(lfd,&temp_set)){
-             
                 int cfd=accept(lfd,nullptr,nullptr);
                 if(cfd==-1){
                     perror("accept");
                 }
-
                 FD_SET(cfd,&red_set);
                 maxfd=cfd>maxfd?cfd:maxfd;   //更新 maxfd
-                
-      
             }
             for(auto i=0;i<=maxfd;++i){ //遍历 fd_set
                 if(i!=lfd && FD_ISSET(i,&temp_set)){ //不是监听 lfd 剩下的就是 cfd
@@ -105,7 +98,7 @@ int main(){
                     int ret_write=send(i,buffer,strlen(buffer),0);  //非阻塞改用 send
                     if(ret_write==-1){
                         perror("write");
-                        break;
+                        // break;
                     }
                 }
             }
