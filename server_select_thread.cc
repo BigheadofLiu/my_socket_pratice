@@ -24,7 +24,6 @@ struct fd_info{
     fd_set& red_set; 
 };
 
-
 void comm_thread(const std::shared_ptr<fd_info> info){
     std::cout<<" 通信子线程开始执行，线程 id："<<std::this_thread::get_id()<<std::endl;
     // 开始收发数据(拷贝阻塞模式的读写)

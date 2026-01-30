@@ -88,7 +88,7 @@ int main(){
                         close(i);
                     }else{  /* -1 */
                         //error
-                        perror("read");
+                        perror("recv");
                         exit(1);
                     }
                     //发数据
@@ -97,7 +97,7 @@ int main(){
                     strcpy(buffer,msg.c_str());  //拷贝消息到缓冲区
                     int ret_write=send(i,buffer,strlen(buffer),0);  //非阻塞改用 send
                     if(ret_write==-1){
-                        perror("write");
+                        perror("send");
                         // break;
                     }
                 }
