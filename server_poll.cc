@@ -37,23 +37,23 @@ int main(){
             perror("listen");
         }
 
-        std::vector<pollfd> fds;
+        std::vector<pollfd> fds;  //使用 vector替换fd_set  数据不支持动态扩展：pollfd fds[1024];
 
         pollfd pfd;
         pfd.fd=lfd;
-        pfd.events=POLLIN;
-        pfd.revents=0;
-        fds.push_back(pfd);
+        pfd.events=POLLIN;   //关注什么事件
+        pfd.revents=0;       //实际发生了什么（内核修改）
+        fds.push_back(pfd);  //放入vector
 
         while (1)
         {
-           int ret=poll(fds.data(),fds.size(),-1);
+           int ret=poll(fds.data(),fds.size(),-1);  
 
            if(ret==-1){
             perror("poll");
             break;
            }
-           for (size_t i = 0; i < fds.size(); ++i)
+           for (size_t i = 0; i < fds.size(); ++i)     //开始遍历 vector
            {
             if (fds[i].revents & POLLIN)
             {
