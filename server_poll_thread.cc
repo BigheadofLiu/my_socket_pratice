@@ -11,8 +11,8 @@
 #include<mutex>
 
 
-std::vector<pollfd> fds;  //使用 vector替换fd_set  数据不支持动态扩展：pollfd fds[1024];
-std::mutex g_mutex;
+static std::vector<pollfd> fds;  //使用 vector替换fd_set  数据不支持动态扩展：pollfd fds[1024];
+static std::mutex g_mutex;
 
 void comm_thread(int fd){
         char buffer[1024] {0}; //读写缓冲区
@@ -44,6 +44,9 @@ void comm_thread(int fd){
             thread_fd.fd=fd;
             thread_fd.events=POLLIN;
             thread_fd.revents=0;
+            {
+
+            }
             fds.push_back(thread_fd);
         }
 }
@@ -78,8 +81,6 @@ int main(){
             perror("listen");
         }
 
-        
-
         pollfd pfd;
         pfd.fd=lfd;
         pfd.events=POLLIN;   //关注什么事件
@@ -103,7 +104,7 @@ int main(){
             perror("poll");
             break;
            }
-           for (size_t i = 0; i < fds.size(); ++i)     //开始遍历 vector
+           for (size_t i = 0; i < fds_temp.size(); ++i)     //开始遍历 vector
            {
             if (fds_temp[i].revents & POLLIN)
             {
@@ -112,13 +113,16 @@ int main(){
                     int cfd=accept(lfd,nullptr,nullptr);
                     if(cfd== -1){
                         perror("accept");
+                        continue;
                     }
                     pollfd new_pfd;
                     new_pfd.fd=cfd;
                     new_pfd.events=POLLIN;
                     new_pfd.revents=0;
-                    fds.push_back(new_pfd);  //放入容器
-
+                    {
+                        std::lock_guard<std::mutex> locker(g_mutex);  //注意加锁
+                        fds.push_back(new_pfd);  //把监听到的 cfd放入容器
+                    }
                 }else{
                     //用于通信的套接字处理
                     bool should_handle=false;  //是否开启子线程标志
@@ -129,7 +133,7 @@ int main(){
                                 //如果 cfd 在 fds 中 取出来交给子线程处理
                                 fds[j]=fds.back();
                                 fds.pop_back();
-                                i--;
+                                // i--;   副本数据不需要修改
                                 should_handle=true;
                                 break;
                             }
