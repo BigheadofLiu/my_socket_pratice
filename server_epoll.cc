@@ -4,9 +4,8 @@
 #include<arpa/inet.h>
 #include<sys/socket.h>
 #include<unistd.h> 
-#include<poll.h> //using poll
-#include<vector> //using vector
-
+#include<sys/epoll.h> //using epoll
+#include<vector>      //using vector
 //epoll模式 改自 poll
 
 int main(){
@@ -38,65 +37,89 @@ int main(){
         if(list==-1){
             perror("listen");
         }
-
-        std::vector<pollfd> fds;  //使用 vector替换fd_set  数据不支持动态扩展：pollfd fds[1024];
-
-        pollfd pfd;
-        pfd.fd=lfd;
-        pfd.events=POLLIN;   //关注什么事件
-        pfd.revents=0;       //实际发生了什么（内核修改）
-        fds.push_back(pfd);  //放入vector
-
+        //创建 epoll实例
+        int epoll_fd=epoll_create(1);
+        if(epoll_fd==-1){
+            perror("epoll_create");
+        }
+        //创建epoll_event 存储 lfd
+        epoll_event ev;
+        ev.events=EPOLLIN;
+        ev.data.fd=lfd;
+        //放入epoll 树
+        auto ctl_ret=epoll_ctl(epoll_fd,EPOLL_CTL_ADD,lfd,&ev);
+        if(ctl_ret==-1){
+            perror("epoll_ctl");
+        }
+        //创建 vector 容器 用于接收就绪事件
+        std::vector<epoll_event> events(1024); //epoll 需要提前分配空间
         while (1)
-        {
-           int ret=poll(fds.data(),fds.size(),-1);  
-
+        {  //阻塞检测 如果检测到就绪事件放入容器中
+           int ret=epoll_wait(epoll_fd,events.data(),events.size(),-1);
+           //error
            if(ret==-1){
-            perror("poll");
+            perror("epoll_wait");
             break;
            }
-           for (size_t i = 0; i < fds.size(); ++i)     //开始遍历 vector
-           {
-            if (fds[i].revents & POLLIN)
-            {
-                if(fds[i].fd==lfd){
+           //ret>0 返回的值为就绪的事件个数  遍历 events
+           for (auto i = 0; i < ret; ++i)     //开始遍历 vector
+           {    
+                auto temp_fd=events[i].data.fd;  //取出 fd 判断是 lfd 还是 cfd 
+                if(temp_fd==lfd){
+                    //如果是 lfd 就做 accept
+                    //accept
                     int cfd=accept(lfd,nullptr,nullptr);
-                    if(cfd== -1){
+                    if(cfd==-1){
                         perror("accept");
+                        continue;
                     }
-                    pollfd new_pfd;
-                    new_pfd.fd=cfd;
-                    new_pfd.events=POLLIN;
-                    new_pfd.revents=0;
-                    fds.push_back(new_pfd);
-
+                    //cfd上树
+                    epoll_event temp_ev;
+                    temp_ev.data.fd=cfd;
+                    temp_ev.events=EPOLLIN;
+                    int temp_ctl_ret=epoll_ctl(epoll_fd,EPOLL_CTL_ADD,cfd,&temp_ev);
+                    if(temp_ctl_ret==-1){
+                        perror("epoll_ctl");
+                    }
                 }else{
-                    char buffer[1024] {0};
-                    int recv_ret=recv(fds[i].fd,buffer,sizeof(buffer),0);
-                    if(recv_ret>0){
-                        std::cout<<"收到客户端（fd="<<fds[i].fd<<")发来的消息："<<buffer<<std::endl;
-
-                        std::string msg="服务器确认收到消息:";
-                        msg+=buffer;
-                        int send_ret=send(fds[i].fd,msg.c_str(),msg.length(),0);
-                        if(send_ret==-1){
-                            perror("send");
+                    //cfd处理
+                    //判断是不是读事件
+                    if(events[i].events & EPOLLIN){
+                        char buffer[1024] {0};
+                        int recv_ret=recv(temp_fd,buffer,sizeof(buffer),0);
+                        if(recv_ret>0){
+                            //缓冲区有数据
+                            std::cout<<"收到客户端（fd="<<temp_fd<<")发来的消息："<<buffer<<std::endl;
+                            std::string msg="服务器确认收到消息:";
+                            msg+=buffer;
+                            int send_ret=send(temp_fd,msg.c_str(),msg.length(),0);
+                            if(send_ret==-1){
+                                perror("send");
+                            }
+                        }else if(recv_ret==0){
+                            //缓冲区无数据
+                            std::cout<<"客户端（fd="<<temp_fd<<")已断开连接"<<std::endl;
+                            // close(events[i].data.fd);  //cfd清除之前需要先关闭
+                            // //容器中删除
+                            // events[i]=events.back();
+                            // events.pop_back();
+                            // i--;
+                            //这里不需要手动管理 交给epoll自己处理
+                            epoll_ctl(epoll_fd,EPOLL_CTL_DEL,temp_fd,nullptr);
+                            close(temp_fd);
+                        }else{
+                            /*-1*/
+                            //返回值-1 出错
+                            perror("recv");
+                            // close(events[i].data.fd);  //cfd清除之前需要先关闭
+                            // //容器中删除
+                            // events[i]=events.back();
+                            // events.pop_back();
+                            epoll_ctl(epoll_fd,EPOLL_CTL_DEL,temp_fd,nullptr);
+                            close(temp_fd);
                         }
-                    }else if(recv_ret==0){
-                        std::cout<<"客户端（fd="<<fds[i].fd<<")已断开连接"<<std::endl;
-                        close(fds[i].fd);  //cfd清除之前需要先关闭
-                        fds[i]=fds.back();
-                        fds.pop_back();
-                        i--;
-                    }else{
-                        /*-1*/
-                        perror("recv");
-                        close(fds[i].fd);
-                        fds[i]=fds.back();
-                        fds.pop_back();
-                    }
+                    }                  
                 }
-            }
            }
         }
     }

@@ -36,9 +36,9 @@ int main(){
         if(list==-1){
             perror("listen");
         }
-
+        //创建 pollfd 容器
         std::vector<pollfd> fds;  //使用 vector替换fd_set  数据不支持动态扩展：pollfd fds[1024];
-
+        //把 lfd 传入
         pollfd pfd;
         pfd.fd=lfd;
         pfd.events=POLLIN;   //关注什么事件
@@ -46,22 +46,25 @@ int main(){
         fds.push_back(pfd);  //放入vector
 
         while (1)
-        {
+        {  //poll 会自动遍历
            int ret=poll(fds.data(),fds.size(),-1);  
 
            if(ret==-1){
             perror("poll");
             break;
            }
+           //poll 的返回值>0
            for (size_t i = 0; i < fds.size(); ++i)     //开始遍历 vector
            {
             if (fds[i].revents & POLLIN)
-            {
+            {   //如果是读事件
                 if(fds[i].fd==lfd){
+                    //如果是监听的 fd
                     int cfd=accept(lfd,nullptr,nullptr);
                     if(cfd== -1){
                         perror("accept");
                     }
+                    //通信的 fd 写入
                     pollfd new_pfd;
                     new_pfd.fd=cfd;
                     new_pfd.events=POLLIN;
@@ -69,11 +72,12 @@ int main(){
                     fds.push_back(new_pfd);
 
                 }else{
+                    //如果是通信的 fd
                     char buffer[1024] {0};
                     int recv_ret=recv(fds[i].fd,buffer,sizeof(buffer),0);
                     if(recv_ret>0){
+                        //缓冲区有数据
                         std::cout<<"收到客户端（fd="<<fds[i].fd<<")发来的消息："<<buffer<<std::endl;
-
                         std::string msg="服务器确认收到消息:";
                         msg+=buffer;
                         int send_ret=send(fds[i].fd,msg.c_str(),msg.length(),0);
@@ -81,13 +85,16 @@ int main(){
                             perror("send");
                         }
                     }else if(recv_ret==0){
+                        //缓冲区无数据
                         std::cout<<"客户端（fd="<<fds[i].fd<<")已断开连接"<<std::endl;
                         close(fds[i].fd);  //cfd清除之前需要先关闭
+                        //容器中删除
                         fds[i]=fds.back();
                         fds.pop_back();
                         i--;
                     }else{
                         /*-1*/
+                        //返回值-1 出错
                         perror("recv");
                         close(fds[i].fd);
                         fds[i]=fds.back();
