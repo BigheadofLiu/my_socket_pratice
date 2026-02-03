@@ -98,8 +98,8 @@ int main(){
                 fds_temp=fds;
             }
 
-           int ret=poll(fds_temp.data(),fds_temp.size(),-1);  
-
+        //    int ret=poll(fds_temp.data(),fds_temp.size(),-1);  
+           int ret=poll(fds_temp.data(),fds_temp.size(),500);   //修改超时时间为 500ms 避免一直阻塞
            if(ret==-1){
             perror("poll");
             break;
