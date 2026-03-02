@@ -7,6 +7,7 @@
 #include<sys/epoll.h> //using epoll
 #include<vector>      //using vector
 //epoll模式 改自 poll
+//默认为 lt（水平模式）  lt 为阻塞模式
 
 int main(){
         //1.创建用于监听的套接字
@@ -85,6 +86,8 @@ int main(){
                     //cfd处理
                     //判断是不是读事件
                     if(events[i].events & EPOLLIN){
+                        //如果是读事件
+                        //阻塞式读缓冲区数据 可以一次不读完
                         char buffer[1024] {0};
                         int recv_ret=recv(temp_fd,buffer,sizeof(buffer),0);
                         if(recv_ret>0){

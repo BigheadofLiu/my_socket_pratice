@@ -8,3 +8,7 @@ tcp通信
 - [x] 线程池实现多个客户端与服务器传输
 - [x] select模式
 - [x] select+多线程
+- [x] poll模式
+- [x] poll+thread
+- [x] epoll lt模式
+- [x] epoll et模式
