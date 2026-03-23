@@ -136,11 +136,13 @@ int main(){
                         // }
 
                         //et 模式必须一次读完
+                        std::string total_msg {};
                         while(true){
                             char buffer[5] {0};   //缓冲区设置的小一点 不一次读完 使循环
                             int recv_ret=recv(temp_fd,buffer,sizeof(buffer)-1,0);  //保证 buffer最后一位为 /0 方便结束本次输出 进入下次循环
                             if(recv_ret>0){
-                                std::cout<<"收到客户端（fd="<<temp_fd<<")发来的消息："<<buffer<<std::endl;
+                                // std::cout<<"收到客户端（fd="<<temp_fd<<")发来的消息："<<buffer<<std::endl;
+                                total_msg+=buffer;
                             }else if(recv_ret==0){
                                 std::cout<<"客户端（fd="<<temp_fd<<")已断开连接"<<std::endl;
                                 epoll_ctl(epoll_fd,EPOLL_CTL_DEL,temp_fd,nullptr);
@@ -148,7 +150,14 @@ int main(){
                                 break;
                             }else{
                                 if(errno==EAGAIN || errno==EWOULDBLOCK){
-                                    std::cout<<"客户端（fd="<<temp_fd<<")发来的消息已读完"<<std::endl;
+                                    std::cout<<"收到客户端（fd="<<temp_fd<<")发来的消息："<<total_msg<<std::endl;
+                                    // std::cout<<"客户端（fd="<<temp_fd<<")发来的消息已读完"<<std::endl;
+                                    //读完之后再发送数据
+                                    std::string msg="服务器确认收到全部消息:";
+                                    int send_ret=send(temp_fd,msg.c_str(),msg.length(),0);
+                                    if(send_ret==-1){
+                                      perror("send");
+                                    }
                                     break;
                                 }else{
                                     perror("recv");
